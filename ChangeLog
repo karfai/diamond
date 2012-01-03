@@ -1,0 +1,6 @@
+v0.1 2012-01-02	Don Kelly <karfai@gmail.com>
+
+	* Initial revision of the gem with support for:
+	  + parsing items, sections and shipping dates from a Diamond releases text file
+	  + formatting the download URL for previewsworld.com
+	  + classifying specific types of things from a line item description
