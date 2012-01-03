@@ -99,19 +99,14 @@ module Diamond
     # the typical current format
     m = /(.+)(?: (TP|HC){1} )VOL ([0-9]+)(?: (.+))?/.match(s)
     if m
+      rv = {
+        :type   => classify_trade_type(m[2]),
+        :volume => m[3].to_i.to_s,
+        :title  => m[1],
+      }
       if m[4]
-        rv = {
-          :type => classify_trade_type(m[2]),
-          :series => m[1],
-          :title => m[4],
-          :volume => m[3].to_i.to_s
-        }
-      else
-        rv = {
-          :type => classify_trade_type(m[2]),
-          :title => m[1],
-          :volume => m[3].to_i.to_s
-        }
+        rv[:series] = m[1]
+        rv[:title] = m[4]
       end
     end
 
