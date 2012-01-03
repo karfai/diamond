@@ -13,4 +13,4 @@
 #    limitations under the License.
 require 'diamond/classify'
 require 'diamond/download'
-require 'diamond/parser'
+require 'diamond/parse'
