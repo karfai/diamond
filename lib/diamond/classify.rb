@@ -14,15 +14,18 @@
 module Diamond  
   def self.classify_special_tag(tag)
     m = /OF ([0-9]+)/.match(tag)
-    return { :final_number => m[1].to_i } if m
+    return { :final_number => m[1] } if m
   end
 
-  def self.classify_extras(s)
+  def self.classify_extras(raw_s)
     tag_map = {
       'O/A' => :ordered_again,
       'MR'  => :mature_readers,
+      'NOTE PRICE' => :price_change,
+      'RES' => :resubmitted,
     }
 
+    s = raw_s.strip
     rv = {}
     tags = []
 
@@ -37,20 +40,23 @@ module Diamond
       end
     end
 
-    if rv.empty?
-      rv[:storyline] = s.strip if s.length && tags.empty?
-      rv[:tags] = tags if !tags.empty?
+    m = /([0-9]+)\w+\sPTG/.match(s)
+    if m
+      rv[:printing] = m[1]
     end
+
+    rv[:tags] = tags if !tags.empty?
+    rv[:storyline] = s if s.length && rv.empty?
 
     rv
   end
 
   def self.classify_issue(s)
     rv = nil
-    m = /([^\#]+)\s\#([0-9]+)(?:\s(.+))?/.match(s)
+    m = /([^\#]+)\s\#([0-9]+(?:\.[0-9]+)?)(?:\s(.+))?/.match(s)
     
     if m
-      rv = { :type => :issue, :series => m[1], :number => m[2].to_i }
+      rv = { :type => :issue, :series => m[1], :number => m[2] }
       if m[3]
         rv = rv.merge(classify_extras(m[3]))
       end
