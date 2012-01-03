@@ -17,7 +17,7 @@ module Diamond
     return { :final_number => m[1] } if m
   end
 
-  def self.classify_extras(raw_s)
+  def self.extract_tags(s)
     tag_map = {
       'O/A' => :ordered_again,
       'MR'  => :mature_readers,
@@ -25,7 +25,6 @@ module Diamond
       'RES' => :resubmitted,
     }
 
-    s = raw_s.strip
     rv = {}
     tags = []
 
@@ -40,33 +39,108 @@ module Diamond
       end
     end
 
-    m = /([0-9]+)\w+\sPTG/.match(s)
-    if m
-      rv[:printing] = m[1]
-    end
-
     rv[:tags] = tags if !tags.empty?
-    rv[:storyline] = s if s.length && rv.empty?
 
     rv
+  end
+
+  def self.extract_extras(s, &extra_fn)
+    rv = {}
+    m = /([0-9]+)\w+ PTG/.match(s)
+    if m
+      rv[:printing] = m[1]
+    else
+      extra_fn.call(s) if s
+    end
+
+    rv
+  end
+
+  def self.classify_extras(raw_s, &extra_fn)
+    s = raw_s.strip
+    rv = {}
+
+    if s.index('(')
+      m = /(?:([^\(]+) )?(.+)/.match(s)
+      tags = self.extract_tags(m[2])
+      rv = rv.merge(tags)
+      s = m[1]
+    end
+
+    extras = self.extract_extras(s, &extra_fn)
+    rv.merge(extras)
   end
 
   def self.classify_issue(s)
     rv = nil
     m = /([^\#]+)\s\#([0-9]+(?:\.[0-9]+)?)(?:\s(.+))?/.match(s)
-    
+
     if m
       rv = { :type => :issue, :series => m[1], :number => m[2] }
       if m[3]
-        rv = rv.merge(classify_extras(m[3]))
+        extras = classify_extras(m[3]) do |s|
+          rv[:storyline] = s if s.length
+        end
+        rv = rv.merge(extras)
       end
     end
     
     rv
   end
 
+  def self.classify_trade_type(s)
+    types = { 'TP' => :tpb, 'HC' => :hc }
+    types.key?(s) ? types[s] : s
+  end
+
+  def self.extract_trade(s)
+    rv = nil
+
+    # the typical current format
+    m = /(.+)(?: (TP|HC){1} )VOL ([0-9]+)(?: (.+))?/.match(s)
+    if m
+      if m[4]
+        rv = {
+          :type => classify_trade_type(m[2]),
+          :series => m[1],
+          :title => m[4],
+          :volume => m[3].to_i.to_s
+        }
+      else
+        rv = {
+          :type => classify_trade_type(m[2]),
+          :title => m[1],
+          :volume => m[3].to_i.to_s
+        }
+      end
+    end
+
+    # sometimes the "TP" is at the end
+    m = /(.+) VOL ([0-9]+) (.+)\sTP/.match(s)
+    if m && !rv
+      rv = { :type => :tpb, :series => m[1], :title => m[3], :volume => m[2].to_i.to_s }
+    end
+
+    # hardcovers
+    m = /(.+) (?:PREM)? HC (.+)/.match(s)
+    if m && !rv
+      rv = { :type => :hc, :series => m[1], :title => m[2] }
+    end
+
+    rv
+  end
+
+  def self.classify_trade(s)
+    rv = nil
+    extras = classify_extras(s) do |rem|
+      rv = extract_trade(rem)
+    end
+ 
+    rv.merge(extras)
+  end
+
   def self.classify(s)
-    rv = classify_issue(s)
+    rv = classify_issue(s) || classify_trade(s)
     yield(rv) if rv
     rv
   end

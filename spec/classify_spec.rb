@@ -101,5 +101,69 @@ describe 'Diamond::classify' do
     end
   end
 
-  pending "should classify trades"
+  it "should classify trades" do
+    expectations = {
+      # atypical TP/VOL expression
+      'LIL DEPRESSED BOY TP VOL 00' => {
+        :type   => :tpb,
+        :title  => 'LIL DEPRESSED BOY',
+        :volume => '0',
+      },
+      # DARK HORSE style
+      'BALTIMORE VOL 01 THE PLAGUE SHIPS TP' => {
+        :type   => :tpb,
+        :series => 'BALTIMORE',
+        :title  => 'THE PLAGUE SHIPS',
+        :volume => '1',
+      },
+      'SOLOMON KANE TP VOL 03 RED SHADOWS' => {
+        :type   => :tpb,
+        :series => 'SOLOMON KANE',
+        :title  => 'RED SHADOWS',
+        :volume => '3',
+      },
+      # DC style
+      'TINY TITANS TP VOL 06 THE TREEHOUSE AND BEYOND' => {
+        :type   => :tpb,
+        :series => 'TINY TITANS',
+        :title  => 'THE TREEHOUSE AND BEYOND',
+        :volume => '6',
+      },
+      'HOUSE OF MYSTERY TP VOL 07 CONCEPTION (MR)' => {
+        :type   => :tpb,
+        :series => 'HOUSE OF MYSTERY',
+        :title  => 'CONCEPTION',
+        :volume => '7',
+        :tags   => [:mature_readers],
+      },
+      # MARVEL style
+      'CAPTAIN AMERICA AND BUCKY PREM HC LIFE OF BUCKY BARNES' => {
+        :type => :hc,
+        :series => 'CAPTAIN AMERICA AND BUCKY',
+        :title => 'LIFE OF BUCKY BARNES',
+      },
+      'SECRET AVENGERS TP VOL 02 EYES OF DRAGON' => {
+        :type => :tpb,
+        :series => 'SECRET AVENGERS',
+        :title => 'EYES OF DRAGON',
+        :volume => '2',
+      },
+      'SECRET AVENGERS HC VOL 02 EYES OF DRAGON' => {
+        :type => :hc,
+        :series => 'SECRET AVENGERS',
+        :title => 'EYES OF DRAGON',
+        :volume => '2',
+      },
+    }
+
+    expectations.each do |src, ex|
+      called = false
+      Diamond::classify(src) do |ac|
+        ac.should == ex
+        called = true
+      end.should == ex
+      
+      called.should be_true
+    end
+  end
 end
