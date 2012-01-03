@@ -98,6 +98,9 @@ describe 'Diamond::classify' do
       end.should == ex
       
       called.should be_true
+
+      # again, w/o block
+      Diamond::classify(src).should == ex
     end
   end
 
@@ -164,6 +167,9 @@ describe 'Diamond::classify' do
       end.should == ex
       
       called.should be_true
+
+      # again, w/o block
+      Diamond::classify(src).should == ex
     end
   end
 end

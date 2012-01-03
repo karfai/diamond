@@ -134,9 +134,9 @@ module Diamond
     rv.merge(extras)
   end
 
-  def self.classify(s)
+  def self.classify(s, &bl)
     rv = classify_issue(s) || classify_trade(s)
-    yield(rv) if rv
+    yield(rv) if rv && bl
     rv
   end
 end
