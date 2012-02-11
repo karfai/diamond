@@ -89,7 +89,7 @@ module Diamond
   end
 
   def self.classify_trade_type(s)
-    types = { 'TP' => :tpb, 'HC' => :hc }
+    types = { 'TP' => :tpb, 'HC' => :hc, 'SC' => :sc, 'GN' => :gn }
     types.key?(s) ? types[s] : s
   end
 
@@ -97,7 +97,7 @@ module Diamond
     rv = nil
 
     # the typical current format
-    m = /(.+)(?: (TP|HC){1} )VOL ([0-9]+)(?: (.+))?/.match(s)
+    m = /(.+)(?: (TP|HC|SC|GN){1} )VOL ([0-9]+)(?: (.+))?/.match(s)
     if m
       rv = {
         :type   => classify_trade_type(m[2]),
@@ -131,7 +131,9 @@ module Diamond
       rv = extract_trade(rem)
     end
  
-    rv.merge(extras)
+    if rv
+      rv.merge(extras)
+    end
   end
 
   def self.classify(s, &bl)

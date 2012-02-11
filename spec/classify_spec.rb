@@ -157,6 +157,18 @@ describe 'Diamond::classify' do
         :title => 'EYES OF DRAGON',
         :volume => '2',
       },
+      'SECRET AVENGERS SC VOL 02 EYES OF DRAGON' => {
+        :type => :sc,
+        :series => 'SECRET AVENGERS',
+        :title => 'EYES OF DRAGON',
+        :volume => '2',
+      },
+      # other
+      'DELTORA QUEST GN VOL 04' => {
+        :type => :gn,
+        :title => 'DELTORA QUEST',
+        :volume => '4',
+      },
     }
 
     expectations.each do |src, ex|

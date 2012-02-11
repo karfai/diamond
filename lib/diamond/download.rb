@@ -23,8 +23,11 @@ module Diamond
   end
 
   def self.download(dt)
-    url_for_date(dt) do |url|
-      open(url) { |f| yield(f) }
+    begin
+      url_for_date(dt) do |url|
+        open(url) { |f| yield(f) }
+      end
+    rescue SocketError
     end
   end
 end
