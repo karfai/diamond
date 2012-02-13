@@ -26,6 +26,7 @@ describe 'Diamond::parse' do
     expectations = {
       '2011-12-21' => { :file => 'spec/fuel/122111.txt' },
       '2011-12-28' => { :file => 'spec/fuel/122811.txt' },
+      '2012-02-08' => { :file => 'spec/fuel/020812.txt' },
     }
 
    expectations.each do |k, v|

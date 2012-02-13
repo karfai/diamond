@@ -15,7 +15,7 @@ require 'date'
 
 module Diamond
   def self.parse_line(ln, c)
-    m = /^Shipping ([0-9]{2})\/([0-9]{2})\/([0-9]{4})/.match(ln)
+    m = /^Shipping ([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})/.match(ln)
     if m
       c.shipping_date(Date.new(m[3].to_i, m[1].to_i, m[2].to_i))
     end
