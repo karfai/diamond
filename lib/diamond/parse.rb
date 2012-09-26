@@ -20,7 +20,12 @@ module Diamond
       c.shipping_date(Date.new(m[3].to_i, m[1].to_i, m[2].to_i))
     end
 
-    m = /^([A-Z]+(\s[A-Z]+)*)\r$/.match(ln)
+    m = /^New Releases For ([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})/.match(ln)
+    if m
+      c.shipping_date(Date.new(m[3].to_i, m[1].to_i, m[2].to_i))
+    end
+
+    m = /^([A-Z]+(\s[A-Z|\&]+)*)\r$/.match(ln)
     if m
       c.section(m[1])
     end
@@ -28,6 +33,11 @@ module Diamond
     m = /^([A-Z]{3}[0-9]{6})\t([^\t]+)\t\$([0-9]+\.[0-9]+)\r$/.match(ln)
     if m
       c.item({:code => m[1], :desc => m[2], :price => m[3]})
+    end
+
+    m = /^([A-Z]{3}[0-9]{6} )\t([^\t]+)\t\$([0-9]+\.[0-9]+)\r$/.match(ln)
+    if m
+      c.item({:code => m[1].strip, :desc => m[2].strip, :price => m[3].strip})
     end
   end
   

@@ -11,7 +11,19 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-require 'diamond/classify'
-require 'diamond/download'
-require 'diamond/parse'
-require 'diamond/dates'
+require 'date'
+require 'active_support/core_ext'
+
+module Diamond
+  def self.current_release_date(t)
+    if t.wday == 0 || (t.wday == 1 && t.hour < 17)
+      t -= (4 + t.wday).days
+    elsif t.wday < 3
+      t += (3 - t.wday).days
+    elsif t.wday > 3
+      t -= (t.wday - 3).days
+    end
+
+    Date.new(t.year, t.month, t.day)
+  end
+end

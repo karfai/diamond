@@ -27,6 +27,7 @@ describe 'Diamond::parse' do
       '2011-12-21' => { :file => 'spec/fuel/122111.txt' },
       '2011-12-28' => { :file => 'spec/fuel/122811.txt' },
       '2012-02-08' => { :file => 'spec/fuel/020812.txt' },
+      '2012-09-05' => { :file => 'spec/fuel/new.txt' },
     }
 
    expectations.each do |k, v|
@@ -45,6 +46,10 @@ describe 'Diamond::parse' do
       '2011-12-28' => {
         :file     => 'spec/fuel/122811.txt',
         :sections => ['PREVIEWS PUBLICATIONS', 'DARK HORSE COMICS', 'DC COMICS', 'IDW PUBLISHING', 'IMAGE COMICS', 'MARVEL COMICS', 'COMICS', 'MAGAZINES', 'MERCHANDISE'],
+      },
+      '2012-09-05' => {
+        :file     => 'spec/fuel/new.txt',
+        :sections => ['PREMIER PUBLISHERS', 'DARK HORSE COMICS', 'DC COMICS', 'IDW PUBLISHING', 'IMAGE COMICS', 'MARVEL COMICS', 'COMICS & GRAPHIC NOVELS', 'MAGAZINES', 'BOOKS', 'MERCHANDISE'],
       }
     }
 
@@ -71,6 +76,15 @@ describe 'Diamond::parse' do
         :some_items => [{:code => 'OCT110237', :desc => 'DC COMICS PRESENTS BATMAN BLAZE OF GLORY #1', :price => '7.99'},
                         {:code => 'OCT110390', :desc => 'ANNE RICE SERVANT OF THE BONES #5 (OF 6)', :price => '3.99'},
                         {:code => 'OCT110729', :desc => 'SECRET AVENGERS TP VOL 02 EYES OF DRAGON', :price => '19.99'},
+                        ]
+      },
+      '2011-09-05' => {
+        :file       => 'spec/fuel/new.txt',
+        :some_items => [{:code => 'JUL121425', :desc => 'SUPERNATURAL MAGAZINE #35 PX ED', :price => '9.99'},
+                        {:code => 'JUL120142', :desc => 'ACTION COMICS #0', :price => '3.99'},
+                        {:code => 'JUL120175', :desc => 'GREEN LANTERN #0 COMBO PACK', :price => '3.99'},
+                        {:code => 'JUL120607', :desc => 'AGE OF APOCALYPSE #7', :price => '2.99'},
+                        {:code => 'JUL120578', :desc => 'INVINCIBLE IRON MAN #524', :price => '3.99'},
                         ]
       }
     }
